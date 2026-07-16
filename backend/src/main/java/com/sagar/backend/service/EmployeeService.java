@@ -1,7 +1,13 @@
 package com.sagar.backend.service;
 
+import com.sagar.backend.dto.EmployeeRequest;
+import com.sagar.backend.dto.EmployeeResponse;
+import com.sagar.backend.entity.Department;
 import com.sagar.backend.entity.Employee;
+import com.sagar.backend.entity.Role;
+import com.sagar.backend.repository.DepartmentRepository;
 import com.sagar.backend.repository.EmployeeRepository;
+import com.sagar.backend.repository.RoleRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,48 +16,115 @@ import java.util.List;
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final DepartmentRepository departmentRepository;
+    private final RoleRepository roleRepository;
 
-    public EmployeeService(EmployeeRepository employeeRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository,
+                           DepartmentRepository departmentRepository,
+                           RoleRepository roleRepository) {
+
         this.employeeRepository = employeeRepository;
+        this.departmentRepository = departmentRepository;
+        this.roleRepository = roleRepository;
     }
 
+    // GET ALL
     public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
     }
 
-public Employee saveEmployee(Employee employee) {
-    return employeeRepository.save(employee);
-}
+    // POST USING DTO
+    public EmployeeResponse saveEmployee(EmployeeRequest request) {
 
+        Department department =
+                departmentRepository.findById(request.getDepartmentId()).orElse(null);
 
-public Employee getEmployeeById(Integer id) {
-    return employeeRepository.findById(id).orElse(null);
-}
+        Role role =
+                roleRepository.findById(request.getRoleId()).orElse(null);
 
+        Employee employee = new Employee();
 
+        employee.setFirstName(request.getFirstName());
+        employee.setLastName(request.getLastName());
+        employee.setEmail(request.getEmail());
+        employee.setPhone(request.getPhone());
+        employee.setSalary(request.getSalary());
+        employee.setHireDate(request.getHireDate());
 
+        employee.setDepartment(department);
+        employee.setRole(role);
 
-public Employee updateEmployee(Integer id, Employee employee) {
+        Employee savedEmployee = employeeRepository.save(employee);
 
-    Employee existingEmployee = employeeRepository.findById(id).orElse(null);
+        EmployeeResponse response = new EmployeeResponse();
 
-    if (existingEmployee == null) {
-        return null;
+        response.setEmployeeId(savedEmployee.getEmployeeId());
+        response.setFirstName(savedEmployee.getFirstName());
+        response.setLastName(savedEmployee.getLastName());
+        response.setEmail(savedEmployee.getEmail());
+        response.setPhone(savedEmployee.getPhone());
+        response.setSalary(savedEmployee.getSalary());
+        response.setHireDate(savedEmployee.getHireDate());
+
+        response.setDepartmentName(savedEmployee.getDepartment().getDepartmentName());
+        response.setRoleName(savedEmployee.getRole().getRoleName());
+
+        return response;
     }
 
-    existingEmployee.setFirstName(employee.getFirstName());
-    existingEmployee.setLastName(employee.getLastName());
-    existingEmployee.setEmail(employee.getEmail());
-    existingEmployee.setPhone(employee.getPhone());
-    existingEmployee.setSalary(employee.getSalary());
-    existingEmployee.setHireDate(employee.getHireDate());
-    existingEmployee.setDepartment(employee.getDepartment());
-    existingEmployee.setRole(employee.getRole());
+    // GET BY ID
+    public Employee getEmployeeById(Integer id) {
+        return employeeRepository.findById(id).orElse(null);
+    }
 
-    return employeeRepository.save(existingEmployee);
-}
+    // GET DTO
+    public EmployeeResponse getEmployeeResponseById(Integer id) {
 
-public void deleteEmployee(Integer id) {
-    employeeRepository.deleteById(id);
-}
+        Employee employee = employeeRepository.findById(id).orElse(null);
+
+        if (employee == null) {
+            return null;
+        }
+
+        EmployeeResponse response = new EmployeeResponse();
+
+        response.setEmployeeId(employee.getEmployeeId());
+        response.setFirstName(employee.getFirstName());
+        response.setLastName(employee.getLastName());
+        response.setEmail(employee.getEmail());
+        response.setPhone(employee.getPhone());
+        response.setSalary(employee.getSalary());
+        response.setHireDate(employee.getHireDate());
+
+        response.setDepartmentName(employee.getDepartment().getDepartmentName());
+        response.setRoleName(employee.getRole().getRoleName());
+
+        return response;
+    }
+
+    // UPDATE (Entity version for now)
+    public Employee updateEmployee(Integer id, Employee employee) {
+
+        Employee existingEmployee = employeeRepository.findById(id).orElse(null);
+
+        if (existingEmployee == null) {
+            return null;
+        }
+
+        existingEmployee.setFirstName(employee.getFirstName());
+        existingEmployee.setLastName(employee.getLastName());
+        existingEmployee.setEmail(employee.getEmail());
+        existingEmployee.setPhone(employee.getPhone());
+        existingEmployee.setSalary(employee.getSalary());
+        existingEmployee.setHireDate(employee.getHireDate());
+        existingEmployee.setDepartment(employee.getDepartment());
+        existingEmployee.setRole(employee.getRole());
+
+        return employeeRepository.save(existingEmployee);
+    }
+
+    // DELETE
+    public void deleteEmployee(Integer id) {
+        employeeRepository.deleteById(id);
+    }
 }

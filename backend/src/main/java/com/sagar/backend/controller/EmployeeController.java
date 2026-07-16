@@ -1,5 +1,7 @@
 package com.sagar.backend.controller;
 
+import com.sagar.backend.dto.EmployeeRequest;
+import com.sagar.backend.dto.EmployeeResponse;
 import com.sagar.backend.entity.Employee;
 import com.sagar.backend.service.EmployeeService;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +23,10 @@ public class EmployeeController {
         return employeeService.getAllEmployees();
     }
 
+    // DTO POST API
     @PostMapping
-    public Employee saveEmployee(@RequestBody Employee employee) {
-        return employeeService.saveEmployee(employee);
+    public EmployeeResponse saveEmployee(@RequestBody EmployeeRequest request) {
+        return employeeService.saveEmployee(request);
     }
 
     @GetMapping("/{id}")
@@ -31,18 +34,21 @@ public class EmployeeController {
         return employeeService.getEmployeeById(id);
     }
 
+    @GetMapping("/{id}/dto")
+    public EmployeeResponse getEmployeeDto(@PathVariable Integer id) {
+        return employeeService.getEmployeeResponseById(id);
+    }
 
+    @PutMapping("/{id}")
+    public Employee updateEmployee(@PathVariable Integer id,
+                                   @RequestBody Employee employee) {
 
-   @PutMapping("/{id}")
-public Employee updateEmployee(@PathVariable Integer id,
-                               @RequestBody Employee employee) {
+        return employeeService.updateEmployee(id, employee);
+    }
 
-    return employeeService.updateEmployee(id, employee);
-}
-
-@DeleteMapping("/{id}")
-public String deleteEmployee(@PathVariable Integer id) {
-    employeeService.deleteEmployee(id);
-    return "Employee deleted successfully.";
-}
+    @DeleteMapping("/{id}")
+    public String deleteEmployee(@PathVariable Integer id) {
+        employeeService.deleteEmployee(id);
+        return "Employee deleted successfully.";
+    }
 }
