@@ -216,3 +216,106 @@
 
 
 
+
+
+
+Employee Management System - Progress Report
+Project Status
+
+Current Sprint: Sprint 15 Completed
+
+Overall Progress: ~70%
+
+✅ Completed
+Environment Setup
+✅ Java 21
+✅ Maven
+✅ MySQL
+✅ Spring Boot
+✅ Git & GitHub
+Database
+✅ Employee Table
+✅ Department Table
+✅ Role Table
+✅ Relationships
+REST APIs
+✅ Create Employee
+✅ Get All Employees
+✅ Get Employee By ID
+✅ Update Employee
+✅ Delete Employee
+DTO
+✅ EmployeeRequest
+✅ EmployeeResponse
+Validation
+✅ Bean Validation
+✅ @Valid
+Exception Handling
+✅ Global Exception Handler
+✅ EmployeeNotFoundException
+Logging
+✅ SLF4J Logging
+✅ INFO
+✅ WARN
+✅ ERROR
+Pagination
+✅ Page
+✅ Pageable
+✅ PageRequest
+Sorting
+✅ Ascending
+✅ Descending
+✅ Dynamic Sorting
+Search APIs
+✅ Search by First Name
+✅ Search by Last Name
+✅ Search by Email
+✅ Search by Department
+✅ Search by Role
+✅ Search by Salary Range
+✅ Partial Search (ContainingIgnoreCase)
+📌 Current Project Features
+Employee CRUD
+DTO Mapping
+Validation
+Exception Handling
+Logging
+Pagination
+Sorting
+Search APIs
+🔜 Next Sprint
+Sprint 16 - Spring Security & JWT Authentication
+Login API
+Register API
+BCrypt Password Encoding
+JWT Token Generation
+JWT Validation
+Role-Based Authorization
+Protected APIs
+GitHub Update
+
+After updating the progress report, save it and run:
+
+git add .
+git commit -m "Updated progress report after Sprint 15"
+git push origin main
+📊 Your Progress So Far
+Sprint	Status
+Project Setup	✅
+Database Design	✅
+CRUD APIs	✅
+DTOs	✅
+Validation	✅
+Exception Handling	✅
+Logging	✅
+Pagination	✅
+Sorting	✅
+Search APIs	✅
+Spring Security + JWT	⏳ Next
+File Upload	⏳ Pending
+Swagger/OpenAPI	⏳ Pending
+Unit Testing	⏳ Pending
+Docker	⏳ Pending
+Deployment	⏳ Pending
+
+
