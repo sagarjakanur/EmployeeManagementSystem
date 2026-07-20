@@ -1,5 +1,8 @@
 package com.sagar.backend.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sagar.backend.dto.EmployeeRequest;
 import com.sagar.backend.dto.EmployeeResponse;
 import com.sagar.backend.entity.Department;
@@ -16,6 +19,9 @@ import java.util.List;
 @Service
 public class EmployeeService {
 
+    private static final Logger logger =
+            LoggerFactory.getLogger(EmployeeService.class);
+
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
     private final RoleRepository roleRepository;
@@ -31,11 +37,17 @@ public class EmployeeService {
 
     // GET ALL
     public List<Employee> getAllEmployees() {
+
+        logger.info("Fetching all employees");
+
         return employeeRepository.findAll();
     }
 
     // POST USING DTO
     public EmployeeResponse saveEmployee(EmployeeRequest request) {
+
+        logger.info("Creating a new employee: {} {}", 
+                request.getFirstName(), request.getLastName());
 
         Department department =
                 departmentRepository.findById(request.getDepartmentId()).orElse(null);
@@ -57,6 +69,9 @@ public class EmployeeService {
 
         Employee savedEmployee = employeeRepository.save(employee);
 
+        logger.info("Employee created successfully with id: {}",
+                savedEmployee.getEmployeeId());
+
         EmployeeResponse response = new EmployeeResponse();
 
         response.setEmployeeId(savedEmployee.getEmployeeId());
@@ -76,14 +91,24 @@ public class EmployeeService {
     // GET BY ID
     public Employee getEmployeeById(Integer id) {
 
-        return employeeRepository.findById(id)
-                .orElseThrow(() ->
-                        new EmployeeNotFoundException(
-                                "Employee not found with id " + id));
-    }
+    logger.info("Fetching employee with id: {}", id);
+
+    Employee employee = employeeRepository.findById(id)
+            .orElseThrow(() -> {
+                logger.warn("Employee not found with id: {}", id);
+                return new EmployeeNotFoundException(
+                        "Employee not found with id " + id);
+            });
+
+    logger.info("Employee found with id: {}", id);
+
+    return employee;
+}
 
     // GET DTO
     public EmployeeResponse getEmployeeResponseById(Integer id) {
+
+        logger.info("Fetching employee DTO with id: {}", id);
 
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() ->
@@ -109,6 +134,8 @@ public class EmployeeService {
     // UPDATE USING DTO
     public EmployeeResponse updateEmployee(Integer id, EmployeeRequest request) {
 
+        logger.info("Updating employee with id: {}", id);
+
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() ->
                         new EmployeeNotFoundException(
@@ -132,6 +159,9 @@ public class EmployeeService {
 
         Employee updatedEmployee = employeeRepository.save(employee);
 
+        logger.info("Employee updated successfully with id: {}",
+                updatedEmployee.getEmployeeId());
+
         EmployeeResponse response = new EmployeeResponse();
 
         response.setEmployeeId(updatedEmployee.getEmployeeId());
@@ -150,6 +180,11 @@ public class EmployeeService {
 
     // DELETE
     public void deleteEmployee(Integer id) {
+
+        logger.info("Deleting employee with id: {}", id);
+
         employeeRepository.deleteById(id);
+
+        logger.info("Employee deleted successfully with id: {}", id);
     }
 }
