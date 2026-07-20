@@ -1,6 +1,8 @@
 package com.sagar.backend.controller;
 
 import jakarta.validation.Valid;
+import java.util.List;
+import java.math.BigDecimal;
 
 import com.sagar.backend.dto.EmployeeRequest;
 import com.sagar.backend.dto.EmployeeResponse;
@@ -30,6 +32,67 @@ public class EmployeeController {
 
         return employeeService.getAllEmployees(page, size, sortBy, direction);
     }
+
+
+
+
+    @GetMapping("/search")
+public List<Employee> searchByFirstName(
+        @RequestParam String firstName) {
+
+    return employeeService.getEmployeesByFirstName(firstName);
+}
+
+@GetMapping("/search/lastname")
+public List<Employee> searchByLastName(
+        @RequestParam String lastName) {
+
+    return employeeService.getEmployeesByLastName(lastName);
+}
+
+
+
+
+// SEARCH BY EMAIL
+@GetMapping("/search/email")
+public List<Employee> searchByEmail(
+        @RequestParam String email) {
+
+    return employeeService.getEmployeesByEmail(email);
+}
+
+// SEARCH BY DEPARTMENT
+@GetMapping("/search/department")
+public List<Employee> searchByDepartment(
+        @RequestParam String departmentName) {
+
+    return employeeService.getEmployeesByDepartment(departmentName);
+}
+
+// SEARCH BY ROLE
+@GetMapping("/search/role")
+public List<Employee> searchByRole(
+        @RequestParam String roleName) {
+
+    return employeeService.getEmployeesByRole(roleName);
+}
+
+// SEARCH BY SALARY RANGE
+@GetMapping("/search/salary")
+public List<Employee> searchBySalaryRange(
+        @RequestParam BigDecimal minSalary,
+        @RequestParam BigDecimal maxSalary) {
+
+    return employeeService.getEmployeesBySalaryRange(minSalary, maxSalary);
+}
+
+// PARTIAL SEARCH
+@GetMapping("/search/name")
+public List<Employee> searchEmployee(
+        @RequestParam String firstName) {
+
+    return employeeService.searchEmployeeByFirstName(firstName);
+}
 
     // POST USING DTO
     @PostMapping

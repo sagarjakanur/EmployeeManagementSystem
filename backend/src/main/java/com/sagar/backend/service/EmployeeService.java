@@ -3,6 +3,8 @@ package com.sagar.backend.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -200,6 +202,73 @@ public Page<Employee> getAllEmployees(
 
         return response;
     }
+
+
+
+
+// SEARCH BY FIRST NAME
+public List<Employee> getEmployeesByFirstName(String firstName) {
+
+    logger.info("Searching employees with first name: {}", firstName);
+
+    return employeeRepository.findByFirstName(firstName);
+}
+
+
+// SEARCH BY LAST NAME
+public List<Employee> getEmployeesByLastName(String lastName) {
+
+    logger.info("Searching employees with last name: {}", lastName);
+
+    return employeeRepository.findByLastName(lastName);
+}
+
+
+
+
+
+// SEARCH BY EMAIL
+public List<Employee> getEmployeesByEmail(String email) {
+
+    logger.info("Searching employee with email: {}", email);
+
+    return employeeRepository.findByEmail(email);
+}
+
+// SEARCH BY DEPARTMENT
+public List<Employee> getEmployeesByDepartment(String departmentName) {
+
+    logger.info("Searching employees in department: {}", departmentName);
+
+    return employeeRepository.findByDepartmentDepartmentName(departmentName);
+}
+
+// SEARCH BY ROLE
+public List<Employee> getEmployeesByRole(String roleName) {
+
+    logger.info("Searching employees with role: {}", roleName);
+
+    return employeeRepository.findByRoleRoleName(roleName);
+}
+
+// SEARCH BY SALARY RANGE
+public List<Employee> getEmployeesBySalaryRange(
+        BigDecimal minSalary,
+        BigDecimal maxSalary) {
+
+    logger.info("Searching employees with salary between {} and {}",
+            minSalary, maxSalary);
+
+    return employeeRepository.findBySalaryBetween(minSalary, maxSalary);
+}
+
+// PARTIAL SEARCH
+public List<Employee> searchEmployeeByFirstName(String firstName) {
+
+    logger.info("Searching employees containing: {}", firstName);
+
+    return employeeRepository.findByFirstNameContainingIgnoreCase(firstName);
+}
 
     // DELETE
     public void deleteEmployee(Integer id) {
