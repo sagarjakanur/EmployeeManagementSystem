@@ -5,6 +5,7 @@ import com.sagar.backend.dto.EmployeeResponse;
 import com.sagar.backend.entity.Department;
 import com.sagar.backend.entity.Employee;
 import com.sagar.backend.entity.Role;
+import com.sagar.backend.exception.EmployeeNotFoundException;
 import com.sagar.backend.repository.DepartmentRepository;
 import com.sagar.backend.repository.EmployeeRepository;
 import com.sagar.backend.repository.RoleRepository;
@@ -74,17 +75,20 @@ public class EmployeeService {
 
     // GET BY ID
     public Employee getEmployeeById(Integer id) {
-        return employeeRepository.findById(id).orElse(null);
+
+        return employeeRepository.findById(id)
+                .orElseThrow(() ->
+                        new EmployeeNotFoundException(
+                                "Employee not found with id " + id));
     }
 
     // GET DTO
     public EmployeeResponse getEmployeeResponseById(Integer id) {
 
-        Employee employee = employeeRepository.findById(id).orElse(null);
-
-        if (employee == null) {
-            return null;
-        }
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() ->
+                        new EmployeeNotFoundException(
+                                "Employee not found with id " + id));
 
         EmployeeResponse response = new EmployeeResponse();
 
@@ -102,25 +106,46 @@ public class EmployeeService {
         return response;
     }
 
-    // UPDATE (Entity version for now)
-    public Employee updateEmployee(Integer id, Employee employee) {
+    // UPDATE USING DTO
+    public EmployeeResponse updateEmployee(Integer id, EmployeeRequest request) {
 
-        Employee existingEmployee = employeeRepository.findById(id).orElse(null);
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() ->
+                        new EmployeeNotFoundException(
+                                "Employee not found with id " + id));
 
-        if (existingEmployee == null) {
-            return null;
-        }
+        Department department =
+                departmentRepository.findById(request.getDepartmentId()).orElse(null);
 
-        existingEmployee.setFirstName(employee.getFirstName());
-        existingEmployee.setLastName(employee.getLastName());
-        existingEmployee.setEmail(employee.getEmail());
-        existingEmployee.setPhone(employee.getPhone());
-        existingEmployee.setSalary(employee.getSalary());
-        existingEmployee.setHireDate(employee.getHireDate());
-        existingEmployee.setDepartment(employee.getDepartment());
-        existingEmployee.setRole(employee.getRole());
+        Role role =
+                roleRepository.findById(request.getRoleId()).orElse(null);
 
-        return employeeRepository.save(existingEmployee);
+        employee.setFirstName(request.getFirstName());
+        employee.setLastName(request.getLastName());
+        employee.setEmail(request.getEmail());
+        employee.setPhone(request.getPhone());
+        employee.setSalary(request.getSalary());
+        employee.setHireDate(request.getHireDate());
+
+        employee.setDepartment(department);
+        employee.setRole(role);
+
+        Employee updatedEmployee = employeeRepository.save(employee);
+
+        EmployeeResponse response = new EmployeeResponse();
+
+        response.setEmployeeId(updatedEmployee.getEmployeeId());
+        response.setFirstName(updatedEmployee.getFirstName());
+        response.setLastName(updatedEmployee.getLastName());
+        response.setEmail(updatedEmployee.getEmail());
+        response.setPhone(updatedEmployee.getPhone());
+        response.setSalary(updatedEmployee.getSalary());
+        response.setHireDate(updatedEmployee.getHireDate());
+
+        response.setDepartmentName(updatedEmployee.getDepartment().getDepartmentName());
+        response.setRoleName(updatedEmployee.getRole().getRoleName());
+
+        return response;
     }
 
     // DELETE

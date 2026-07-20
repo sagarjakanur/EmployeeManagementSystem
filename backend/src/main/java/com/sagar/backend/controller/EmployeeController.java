@@ -1,5 +1,7 @@
 package com.sagar.backend.controller;
 
+import jakarta.validation.Valid;
+
 import com.sagar.backend.dto.EmployeeRequest;
 import com.sagar.backend.dto.EmployeeResponse;
 import com.sagar.backend.entity.Employee;
@@ -18,34 +20,39 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
+    // GET ALL EMPLOYEES
     @GetMapping
     public List<Employee> getAllEmployees() {
         return employeeService.getAllEmployees();
     }
 
-    // DTO POST API
-    @PostMapping
-    public EmployeeResponse saveEmployee(@RequestBody EmployeeRequest request) {
-        return employeeService.saveEmployee(request);
-    }
+    // POST USING DTO
+@PostMapping
+public EmployeeResponse saveEmployee(@Valid @RequestBody EmployeeRequest request) {
+    return employeeService.saveEmployee(request);
+}
 
+    // GET EMPLOYEE BY ID (Entity)
     @GetMapping("/{id}")
     public Employee getEmployeeById(@PathVariable Integer id) {
         return employeeService.getEmployeeById(id);
     }
 
+    // GET EMPLOYEE BY ID (DTO)
     @GetMapping("/{id}/dto")
     public EmployeeResponse getEmployeeDto(@PathVariable Integer id) {
         return employeeService.getEmployeeResponseById(id);
     }
 
+    // PUT USING DTO
     @PutMapping("/{id}")
-    public Employee updateEmployee(@PathVariable Integer id,
-                                   @RequestBody Employee employee) {
+   public EmployeeResponse updateEmployee(@PathVariable Integer id,
+                                       @Valid @RequestBody EmployeeRequest request) {
 
-        return employeeService.updateEmployee(id, employee);
-    }
+    return employeeService.updateEmployee(id, request);
+}
 
+    // DELETE EMPLOYEE
     @DeleteMapping("/{id}")
     public String deleteEmployee(@PathVariable Integer id) {
         employeeService.deleteEmployee(id);
