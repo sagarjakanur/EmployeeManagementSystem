@@ -3,6 +3,12 @@ package com.sagar.backend.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+
 import com.sagar.backend.dto.EmployeeRequest;
 import com.sagar.backend.dto.EmployeeResponse;
 import com.sagar.backend.entity.Department;
@@ -35,13 +41,30 @@ public class EmployeeService {
         this.roleRepository = roleRepository;
     }
 
-    // GET ALL
-    public List<Employee> getAllEmployees() {
+     
+// GET ALL WITH PAGINATION & SORTING
+public Page<Employee> getAllEmployees(
+        int page,
+        int size,
+        String sortBy,
+        String direction) {
 
-        logger.info("Fetching all employees");
+    logger.info(
+            "Fetching employees - Page: {}, Size: {}, Sort By: {}, Direction: {}",
+            page, size, sortBy, direction);
 
-        return employeeRepository.findAll();
+    Sort sort;
+
+    if (direction.equalsIgnoreCase("desc")) {
+        sort = Sort.by(sortBy).descending();
+    } else {
+        sort = Sort.by(sortBy).ascending();
     }
+
+    Pageable pageable = PageRequest.of(page, size, sort);
+
+    return employeeRepository.findAll(pageable);
+}
 
     // POST USING DTO
     public EmployeeResponse saveEmployee(EmployeeRequest request) {
