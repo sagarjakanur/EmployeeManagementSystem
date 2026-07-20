@@ -1,6 +1,8 @@
 package com.sagar.backend.exception;
 
 import com.sagar.backend.dto.ErrorResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -13,10 +15,15 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final Logger logger =
+            LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     // Handle Validation Exceptions
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(
             MethodArgumentNotValidException ex) {
+
+        logger.error("Validation failed: {}", ex.getMessage());
 
         List<String> errors = new ArrayList<>();
 
@@ -37,6 +44,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmployeeNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleEmployeeNotFoundException(
             EmployeeNotFoundException ex) {
+
+        logger.error("EmployeeNotFoundException: {}", ex.getMessage());
 
         ErrorResponse response = new ErrorResponse();
 
